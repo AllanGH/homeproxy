@@ -1,0 +1,9 @@
+{
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+}
+
+# One block per service. Each name needs a DNS-only A record
+# pointing at 192.168.50.249.
+dash.kertinge.dk {
+	reverse_proxy 192.168.50.249:8080
+}
