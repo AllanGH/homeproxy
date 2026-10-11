@@ -5,15 +5,25 @@ kertinge.dk. Lives in `/data/projects/homeproxy` on the home server.
 
 ## Setup (once)
 
-1. Move kertinge.dk's DNS to Cloudflare (free plan).
-2. In Cloudflare add an A record `dash` -> `192.168.50.249`, proxy status
+1. **Move the DNS to Cloudflare.** In the Cloudflare dashboard choose
+   *Add a domain*, enter `kertinge.dk`, pick the Free plan and continue past
+   the record scan. Cloudflare then shows two nameservers
+   (`<name>.ns.cloudflare.com`).
+2. **Point the domain at them.** At the registrar (dns.services), open
+   kertinge.dk, turn off DNSSEC if it is on, and replace the nameservers
+   with Cloudflare's two. When Cloudflare shows the domain as *Active*
+   (minutes to a few hours), continue.
+3. **Add the record.** Cloudflare > kertinge.dk > DNS > Records > Add
+   record: type `A`, name `dash`, IPv4 `192.168.50.249`, proxy status
    **DNS only** (grey cloud).
-3. Create an API token: Zone > DNS > Edit, limited to kertinge.dk. Copy
-   `.env.example` to `.env` and put it there.
-4. Let rootless Docker bind 443 (needs sudo, once):
+4. **Create the token.** My Profile > API Tokens > Create Token > template
+   *Edit zone DNS*; under Zone Resources pick *Specific zone* `kertinge.dk`;
+   create and copy it (shown once). On the server, copy `.env.example` to
+   `.env` and paste it after `CLOUDFLARE_API_TOKEN=`.
+5. Let rootless Docker bind 443 (needs sudo, once):
    `echo net.ipv4.ip_unprivileged_port_start=443 | sudo tee /etc/sysctl.d/90-unprivileged-443.conf && sudo sysctl --system`
-5. Open 443/tcp in the firewall for the LAN.
-6. `docker compose up -d --build`
+6. Open 443/tcp in the firewall for the LAN.
+7. `docker compose up -d --build`
 
 Then https://dash.kertinge.dk opens the dashboard.
 
