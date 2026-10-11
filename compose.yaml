@@ -1,0 +1,16 @@
+# Home reverse proxy: HTTPS for LAN-only services under kertinge.dk.
+# Certificates come from Let's Encrypt via the DNS challenge, so nothing
+# here is reachable from the internet.
+services:
+  caddy:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      # LAN address only. Rootless Docker needs
+      # net.ipv4.ip_unprivileged_port_start=443 to bind 443.
+      - "192.168.50.249:443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./data:/data        # certificates and ACME account
+      - ./config:/config
