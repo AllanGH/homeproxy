@@ -31,3 +31,10 @@ Then https://dash.kertinge.dk opens the dashboard.
 
 Add a block to `Caddyfile`, an A record for its name, and
 `docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile`.
+
+## Calendars
+
+`https://dash.kertinge.dk/caldav/` goes to dashhund's Radicale CalDAV
+server (port 5232, compose profile `calendar`); everything else to the
+dashboard. `/.well-known/caldav` redirects there, so a phone finds it from
+the bare host name. After pulling this change, reload Caddy as above.

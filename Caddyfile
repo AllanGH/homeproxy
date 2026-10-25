@@ -5,5 +5,15 @@
 # One block per service. Each name needs a DNS-only A record
 # pointing at 192.168.50.249.
 dash.kertinge.dk {
-	reverse_proxy 192.168.50.249:8080
+	# Family calendars (Radicale CalDAV, dashhund's deploy/compose.yaml)
+	# for phones: https://dash.kertinge.dk/caldav/
+	redir /.well-known/caldav /caldav/ 301
+	handle_path /caldav/* {
+		reverse_proxy 192.168.50.249:5232 {
+			header_up X-Script-Name /caldav
+		}
+	}
+	handle {
+		reverse_proxy 192.168.50.249:8080
+	}
 }
